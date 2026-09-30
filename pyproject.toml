@@ -1,0 +1,31 @@
+[project]
+name = "centralog-sdk"
+version = "0.1.0"
+description = "Python SDK for Centralog error monitoring. Captures exceptions and sends a copy to your Centralog platform without breaking your app."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+keywords = ["centralog", "error-monitoring", "fastapi", "flask", "django"]
+dependencies = [
+    "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+fastapi = ["fastapi>=0.110"]
+flask = ["flask>=3.0"]
+django = ["django>=4.2"]
+dev = ["pytest>=8.0", "pytest-asyncio>=0.23", "ruff>=0.4", "fastapi>=0.110", "flask>=3.0", "django>=4.2", "httpx>=0.27"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["centralog"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
