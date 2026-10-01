@@ -92,3 +92,21 @@ def test_extra_context_merged(monkeypatch):
     client.flush_context()
 
     assert client.get_context() == {}
+
+
+class PaymentFailedError(Exception):
+    """Custom domain exception for a failing payment."""
+
+
+def test_capture_custom_exception_with_custom_level(monkeypatch):
+    sent = _fake_ok(monkeypatch)
+    client = _client()
+
+    assert (
+        client.capture(PaymentFailedError("gateway timeout"), {"order_id": 9182}, level="warning")
+        is True
+    )
+    assert sent["body"]["level"] == "warning"
+    assert sent["body"]["exception"]["class"] == "test_client.PaymentFailedError"
+    assert sent["body"]["exception"]["message"] == "gateway timeout"
+    assert sent["body"]["context"] == {"order_id": 9182}

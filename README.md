@@ -75,6 +75,30 @@ except Exception as exc:
 
 Your local logging keeps working as always — the SDK only sends a **copy** to Centralog.
 
+## Errores personalizados
+
+Cualquier excepción (incluidas las de tu dominio) se puede capturar manualmente
+con un nivel (`error`, `warning`, `info` o `debug`):
+
+```python
+from centralog import CentralogClient
+
+class PaymentFailedError(Exception):
+    pass
+
+client = CentralogClient()
+
+try:
+    charge(order)
+except PaymentFailedError as exc:
+    client.capture(exc, {"order_id": order.id}, level="warning")
+```
+
+Cada excepción se agrupa en Centralog por **clase + archivo + línea**, así que
+cada excepción custom de tu dominio genera su propio grupo en el panel.
+
+Niveles válidos: `error` (default), `warning`, `info`, `debug`.
+
 ## Safety
 
 - Short timeout (2s default), never blocks a request for long.
