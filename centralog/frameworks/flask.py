@@ -24,7 +24,7 @@ def register(app: Flask, client: CentralogClient | None = None) -> CentralogClie
     @app.errorhandler(Exception)
     def _report(error: BaseException):  # type: ignore[no-untyped-def]
         if isinstance(error, HTTPException) and getattr(error, "code", 500) < 500:
-            raise error
+            return error.get_response()
         client.capture(
             error,
             request={
